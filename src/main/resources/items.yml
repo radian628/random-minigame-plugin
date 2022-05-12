@@ -1,0 +1,12 @@
+items:
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: NETHERITE_SWORD
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: CROSSBOW
+      - v: 2975
+        type: ARROW
+        amount: 8

@@ -1,0 +1,21 @@
+main: radian628.randomminigame.App
+name: RandomMinigame
+version: 0.1.0
+commands:
+  startrandomminigame:
+    description: Starts the random minigame.
+    usage: /startrandomminigame
+    permission: radian628.randomminigame.start
+  setminimumplayers:
+    description: Sets the number of players at which point the game ends. Only really useful for singleplayer testing.
+    usage: /setminimumplayers <number>
+    permission: radian628.randomminigame.setminplayers
+  testitemserialization:
+    description: Serializes the player's held item and puts it in a YAML file, allowing for easy conversion to the plugin.
+    usage: /testitemserialization
+    permission: radian628.randomminigame.testitemserialization
+  reloaditemconfig:
+    description: Reloads the set of items that can be given in the random minigame.
+    usage: /reloaditemconfig
+    permission: radian628.randomminigame.reloaditemconfig
+api-version: 1.18
