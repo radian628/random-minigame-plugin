@@ -1,18 +1,18 @@
 items:
   # Melee Weapons =============================================================
-  - weight: 1.0
+  - weight: 2.0
     items:
       - v: 2975
         type: NETHERITE_SWORD
-  - weight: 1.0
+  - weight: 4.0
     items:
       - v: 2975
         type: IRON_SWORD
-  - weight: 1.0
+  - weight: 3.0
     items:
       - v: 2975
         type: WOODEN_SWORD
-  - weight: 1.0
+  - weight: 2.0
     items:
       - v: 2975
         type: FIRE_CHARGE
@@ -25,7 +25,7 @@ items:
     items:
       - v: 2975
         type: ANVIL
-        amount: 64
+        amount: 3
         meta:
           ==: ItemMeta
           meta-type: UNSPECIFIC
@@ -52,36 +52,194 @@ items:
 
 
 
-  # Ranged Weapons =============================================================
+
+  # Tools =====================================================================
   - weight: 1.0
+    items:
+      - v: 2975
+        type: NETHERITE_PICKAXE
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: IRON_PICKAXE
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: WOODEN_PICKAXE
+
+
+
+
+  # Ranged Weapons =============================================================
+  - weight: 1.5
     items:
       - v: 2975
         type: CROSSBOW
       - v: 2975
         type: ARROW
         amount: 8
-  - weight: 1.0
+  - weight: 1.5
     items:
       - v: 2975
         type: BOW
       - v: 2975
         type: ARROW
         amount: 8
-  - weight: 1.0
+  - weight: 1.5
     items:
       - v: 2975
         type: FIRE_CHARGE
-        amount: 64
+        amount: 5
         meta:
           ==: ItemMeta
           meta-type: UNSPECIFIC
           display-name: '[{"text":"Fire Ball","italic":false}]'
-
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: SNOWBALL
+        amount: 3
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: '[{"text":"Ball Lightning","italic":"false"}]'
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: CROSSBOW
+      - v: 2975
+        type: FIREWORK_ROCKET
+        amount: 3
+        meta:
+          ==: ItemMeta
+          meta-type: FIREWORK
+          display-name: '{"text":"Mini Nuke","color":"red"}'
+          firework-effects:
+          - ==: Firework
+            flicker: false
+            trail: false
+            colors:
+            - ==: Color
+              RED: 255
+              BLUE: 255
+              GREEN: 255
+            fade-colors: &id001 []
+            type: BALL
+          - ==: Firework
+            flicker: false
+            trail: false
+            colors:
+            - ==: Color
+              RED: 255
+              BLUE: 255
+              GREEN: 255
+            fade-colors: *id001
+            type: BALL
+          - ==: Firework
+            flicker: false
+            trail: false
+            colors:
+            - ==: Color
+              RED: 255
+              BLUE: 255
+              GREEN: 255
+            fade-colors: *id001
+            type: BALL
+          - ==: Firework
+            flicker: false
+            trail: false
+            colors:
+            - ==: Color
+              RED: 255
+              BLUE: 255
+              GREEN: 255
+            fade-colors: *id001
+            type: BALL
+          - ==: Firework
+            flicker: false
+            trail: false
+            colors:
+            - ==: Color
+              RED: 255
+              BLUE: 255
+              GREEN: 255
+            fade-colors: *id001
+            type: BALL
+          - ==: Firework
+            flicker: false
+            trail: false
+            colors:
+            - ==: Color
+              RED: 255
+              BLUE: 255
+              GREEN: 255
+            fade-colors: *id001
+            type: BALL
+          - ==: Firework
+            flicker: false
+            trail: false
+            colors:
+            - ==: Color
+              RED: 255
+              BLUE: 255
+              GREEN: 255
+            fade-colors: *id001
+            type: BALL
+          - ==: Firework
+            flicker: false
+            trail: false
+            colors:
+            - ==: Color
+              RED: 255
+              BLUE: 255
+              GREEN: 255
+            fade-colors: *id001
+            type: BALL
+          - ==: Firework
+            flicker: false
+            trail: false
+            colors:
+            - ==: Color
+              RED: 255
+              BLUE: 255
+              GREEN: 255
+            fade-colors: *id001
+            type: BALL
+          - ==: Firework
+            flicker: false
+            trail: false
+            colors:
+            - ==: Color
+              RED: 255
+              BLUE: 255
+              GREEN: 255
+            fade-colors: *id001
+            type: BALL
+          - ==: Firework
+            flicker: false
+            trail: false
+            colors:
+            - ==: Color
+              RED: 255
+              BLUE: 255
+              GREEN: 255
+            fade-colors: *id001
+            type: BALL
+          - ==: Firework
+            flicker: false
+            trail: false
+            colors:
+            - ==: Color
+              RED: 255
+              BLUE: 255
+              GREEN: 255
+            fade-colors: *id001
+            type: BALL
 
 
 
   # Blocks =============================================================
-  - weight: 1.0
+  - weight: 2.0
     items:
       - v: 2975
         type: BRICK
@@ -90,7 +248,7 @@ items:
           ==: ItemMeta
           meta-type: UNSPECIFIC
           display-name: '[{"text":"Instant Bridge","italic":false}]'
-  - weight: 1.0
+  - weight: 2.0
     items:
       - v: 2975
         type: BRICK
@@ -99,7 +257,7 @@ items:
           ==: ItemMeta
           meta-type: UNSPECIFIC
           display-name: '[{"text":"Instant Platform","italic":false}]'
-  - weight: 1.0
+  - weight: 2.0
     items:
       - v: 2975
         type: BRICK
@@ -108,29 +266,147 @@ items:
           ==: ItemMeta
           meta-type: UNSPECIFIC
           display-name: '[{"text":"Instant Wall","italic":false}]'
-  - weight: 1.0
+  - weight: 2.0
     items: 
       - v: 2975
         type: SLIME_BLOCK
         amount: 64
-  - weight: 1.0
+  - weight: 2.0
     items: 
       - v: 2975
         type: STONE
         amount: 64
-  - weight: 1.0
+  - weight: 2.0
     items: 
       - v: 2975
         type: OAK_PLANKS
         amount: 64
-  - weight: 1.0
+  - weight: 2.0
     items: 
       - v: 2975
         type: GRASS_BLOCK
         amount: 64
-  - weight: 1.0
+  - weight: 2.0
     items: 
       - v: 2975
         type: OAK_LEAVES
         amount: 64
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: BEE_NEST
+        meta:
+          ==: ItemMeta
+          meta-type: TILE_ENTITY
+          internal: H4sIAAAAAAAA/+NiYOBi4HPKyU/Ods0rySypDElM52RgcUpNLeZiYGCw42Lggoi7JJYkcjAwZaYwMCelpoJ0jUqMSoxKjEqMSowYCQYGALuYseswBgAA
+          blockMaterial: BEE_NEST
       
+
+
+
+  # Potions
+  - weight: 1.0
+    items:
+    - v: 2975
+      type: POTION
+      meta:
+        ==: ItemMeta
+        meta-type: POTION
+        display-name: '[{"text":"Potion of Platforming","italic":false}]'
+        potion-type: minecraft:water
+        custom-effects:
+        - ==: PotionEffect
+          effect: 8
+          duration: 6000
+          amplifier: 6
+          ambient: false
+          has-particles: true
+          has-icon: true
+        - ==: PotionEffect
+          effect: 28
+          duration: 6000
+          amplifier: 1
+          ambient: false
+          has-particles: true
+          has-icon: true
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: LINGERING_POTION
+        meta:
+          ==: ItemMeta
+          meta-type: POTION
+          display-name: '[{"text":"Carbon Monoxide","italic":false}]'
+          custom-color:
+            ==: Color
+            RED: 255
+            BLUE: 255
+            GREEN: 255
+          custom-effects:
+          - ==: PotionEffect
+            effect: 20
+            duration: 600
+            amplifier: 1
+            ambient: false
+            has-particles: true
+            has-icon: true
+
+
+
+
+
+
+
+
+  # Movement
+  - weight: 1.0
+    items: 
+      - v: 2975
+        type: ENDER_PEARL
+        amount: 16
+  - weight: 1.0
+    items: 
+      - v: 2975
+        type: ELYTRA
+        amount: 1
+
+
+
+
+
+# spawn eggs
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: CREEPER_SPAWN_EGG
+        amount: 48
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: RAVAGER_SPAWN_EGG
+        amount: 4
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: EVOKER_SPAWN_EGG
+        amount: 4
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: BLAZE_SPAWN_EGG
+        amount: 12
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: GHAST_SPAWN_EGG
+        amount: 20
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: PILLAGER_SPAWN_EGG
+        amount: 10
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: SHULKER_SPAWN_EGG
+        amount: 20

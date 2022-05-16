@@ -1,1 +1,3 @@
 target/*
+build.sh
+send-items.sh

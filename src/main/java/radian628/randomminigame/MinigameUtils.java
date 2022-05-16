@@ -4,17 +4,21 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 public class MinigameUtils {
+    public static Map<Entity, Integer> ballLightnings;
+
     public static int ISLAND_SIZE = 3;
     public static double ISLAND_CIRCLE_RADIUS = 8.0;
 
@@ -48,7 +52,13 @@ public class MinigameUtils {
             MinigameUtils.itemChooser.addChoice(itemListAsItems, (Double)itemChoice.get("weight"));
         }
 
-        MinigameUtils.ISLAND_CIRCLE_RADIUS = plugin.getConfig().getDouble("island-circle-radius", 10.0);
+        MinigameUtils.ISLAND_CIRCLE_RADIUS = plugin.getConfig().getDouble("island-circle-radius", 24.0);
         MinigameUtils.ISLAND_SIZE = plugin.getConfig().getInt("island-size", 4);
+    }
+
+    public static boolean isNamedItem(ItemStack item, Material material, String name) {
+        return             item.getType() == material &&
+            item.getItemMeta().hasDisplayName() && 
+            item.getItemMeta().getDisplayName().equals(name);
     }
 }

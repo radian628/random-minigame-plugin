@@ -1,18 +1,27 @@
 package radian628.randomminigame;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.WorldBorder;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -28,6 +37,7 @@ public class App extends JavaPlugin implements Listener {
     public void onEnable() {
         saveDefaultConfig();
         configureMinigame();
+        MinigameUtils.ballLightnings = new HashMap<Entity, Integer>();
         MinigameUtils.reloadItemConfig(this);
 
         this.getCommand("startrandomminigame").setExecutor(new StartGameCommand(getDataFolder()));
@@ -38,23 +48,49 @@ public class App extends JavaPlugin implements Listener {
 
         getServer().getPluginManager().registerEvents(this, this);
 
+        // get items
         Bukkit.getScheduler().scheduleSyncRepeatingTask((Plugin)this, new Runnable() {
             @Override
             public void run() {
                 if (MinigameUtils.isGameActive) {
                     MinigameUtils.minigameCounter++;
-                    if (MinigameUtils.minigameCounter % 15 == 0) {
+                    boolean shouldGiveItem = MinigameUtils.minigameCounter < 3;
+                    if (MinigameUtils.minigameCounter % 30 == 0) {
+                        shouldGiveItem = true;
+                    }
+                    if (shouldGiveItem) {
                         getServer().broadcastMessage("Everyone received something!");
-                        List<ItemStack> itemChoice = MinigameUtils.itemChooser.getRandomItems();
-                        for (ItemStack items : itemChoice) {
-                            for (Player remainingPlayer : MinigameUtils.playersRemaining) {
-                                remainingPlayer.getInventory().addItem(items);
+                        for (int i = 0; i < 3; i++) {
+                            List<ItemStack> itemChoice = MinigameUtils.itemChooser.getRandomItems();
+                            for (ItemStack items : itemChoice) {
+                                for (Player remainingPlayer : MinigameUtils.playersRemaining) {
+                                    remainingPlayer.getInventory().addItem(items);
+                                }
                             }
                         }
                     }
                 }
             }
         }, 0L, 20L);
+
+        // ball lightning and other per-tick things
+        Bukkit.getScheduler().scheduleSyncRepeatingTask((Plugin)this, new Runnable() {
+            @Override
+            public void run() {
+                for (Entry<Entity, Integer> p : MinigameUtils.ballLightnings.entrySet()) {
+                  
+                    if (p.getValue() > 5) {
+                        p.getKey().getWorld().spawnEntity(p.getKey().getLocation(), EntityType.LIGHTNING);
+                    }
+                    p.setValue(p.getValue() + 1);
+                }
+                MinigameUtils.ballLightnings.keySet().removeAll(
+                        MinigameUtils.ballLightnings.entrySet().stream()
+                        .filter(p -> p.getKey().isDead()).map(e -> e.getKey())
+                        .collect(Collectors.toList())
+                    );
+            }
+        }, 0L, 1L);
     }
     @Override
     public void onDisable() {
@@ -82,6 +118,34 @@ public class App extends JavaPlugin implements Listener {
                 player.teleport(loc);
                 player.getInventory().clear();
             }
+
+            World world = Bukkit.getWorlds().get(0);
+            WorldBorder border = world.getWorldBorder();
+            border.setCenter(0, 0);
+            border.setSize(900);
+        }
+    }
+
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onProjectileLaunch(ProjectileLaunchEvent event) {
+        Entity e = event.getEntity();
+        if (e.getType() == EntityType.SNOWBALL) {
+            List<Player> players = new ArrayList<>(getServer().getOnlinePlayers());
+            Player closestPlayer = null;
+            double closestPlayerDistance = Double.POSITIVE_INFINITY;
+            for (Player player : players) {
+                double distance = player.getLocation().distance(e.getLocation());
+                if (distance < closestPlayerDistance) {
+                    closestPlayer = player;
+                    closestPlayerDistance = distance;
+                }
+            }
+            if (closestPlayer != null && 
+            MinigameUtils.isNamedItem(closestPlayer.getInventory().getItemInMainHand(), Material.SNOWBALL, "Ball Lightning")) {
+              
+                MinigameUtils.ballLightnings.put(e, 0);
+            }
         }
     }
 
@@ -91,10 +155,14 @@ public class App extends JavaPlugin implements Listener {
     public void onPlayerUse(PlayerInteractEvent event) {
         Player p = event.getPlayer();
 
-        getLogger().info("PLAYER USE EVENT!!!!!!!");
-
         ItemStack item = p.getInventory().getItemInMainHand();
 
+
+
+        // if (MinigameUtils.isNamedItem(item, Material.SNOWBALL, "Ball Lightning")) {
+        //     getLogger().info("BALL LIGHTNING");
+        //     if (event.getAction() == Action.)
+        // }
 
 
 
@@ -104,7 +172,6 @@ public class App extends JavaPlugin implements Listener {
             item.getItemMeta().hasDisplayName() && 
             item.getItemMeta().getDisplayName().equals("Instant Platform")
         ) {
-            getLogger().info("PLAYER USE EVENT WITH BRICK!!!!!!!");
             RayTraceResult rtr = p.rayTraceBlocks(5);
             if (rtr == null) return;
             Vector pos = rtr.getHitPosition();
@@ -178,8 +245,8 @@ public class App extends JavaPlugin implements Listener {
             Vector pos = rtr.getHitPosition();
             MinigameUtils.clearRegion(
                 p.getWorld(), Material.TNT, 
-                pos.getBlockX() - 2, pos.getBlockY() - 6, pos.getBlockZ() - 2, 
-                pos.getBlockX() + 3, pos.getBlockY() - 1, pos.getBlockZ() + 3
+                pos.getBlockX() - 2, pos.getBlockY() - 5, pos.getBlockZ() - 2, 
+                pos.getBlockX() + 3, pos.getBlockY() - 0, pos.getBlockZ() + 3
             );
             p.getWorld().spawnEntity(
                 new Location(p.getWorld(), pos.getX(), pos.getY() + 1, pos.getZ()),
@@ -203,8 +270,8 @@ public class App extends JavaPlugin implements Listener {
             Vector pos = rtr.getHitPosition();
             MinigameUtils.clearRegion(
                 p.getWorld(), Material.TNT, 
-                pos.getBlockX() - 4, pos.getBlockY() - 10, pos.getBlockZ() - 4, 
-                pos.getBlockX() + 5, pos.getBlockY() - 1, pos.getBlockZ() + 5
+                pos.getBlockX() - 4, pos.getBlockY() - 9, pos.getBlockZ() - 4, 
+                pos.getBlockX() + 5, pos.getBlockY() - 0, pos.getBlockZ() + 5
             );
             p.getWorld().spawnEntity(
                 new Location(p.getWorld(), pos.getX(), pos.getY() + 1, pos.getZ()),
@@ -222,16 +289,14 @@ public class App extends JavaPlugin implements Listener {
             item.getItemMeta().hasDisplayName() && 
             item.getItemMeta().getDisplayName().equals("Fire Ball")
         ) {
-
-            RayTraceResult rtr = p.rayTraceBlocks(5);
-            if (rtr == null) return;
-            Vector pos = rtr.getHitPosition();
+            Vector pos = p.getLocation().toVector();
+            pos = pos.add(p.getLocation().getDirection());
             Fireball fireball =  (Fireball)p.getWorld().spawnEntity(
                 new Location(p.getWorld(), pos.getX(), pos.getY() + 1.5, pos.getZ()),
                 EntityType.FIREBALL
             );
             fireball.setIsIncendiary(true);
-            fireball.setVelocity(new Vector(0.0, 0.0, 0.0));
+            fireball.setDirection(p.getLocation().getDirection());
             fireball.setBounce(true);
             fireball.setYield(4.0f);
            
@@ -252,10 +317,11 @@ public class App extends JavaPlugin implements Listener {
             Vector pos = rtr.getHitPosition();
             for (int z = -6; z < 7; z++) {
                 for (int x = -6; x < 7; x++) {
-                    p.getWorld().spawnFallingBlock(
+                    FallingBlock fb = p.getWorld().spawnFallingBlock(
                         new Location(p.getWorld(), pos.getX() + x, pos.getY() + 30, pos.getZ() + z),
                         Bukkit.createBlockData(Material.ANVIL)
                     );
+                    fb.setHurtEntities(true);
                 }
             }
            

@@ -11,6 +11,7 @@ public class ItemChooser {
     double weightSum;
     List<List<ItemStack>> choices;
 
+
     public ItemChooser() {
         weights = new ArrayList<Double>();
         choices = new ArrayList<List<ItemStack>>();

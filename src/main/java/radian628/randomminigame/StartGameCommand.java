@@ -3,13 +3,17 @@ import org.bukkit.command.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.WorldBorder;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
@@ -32,7 +36,7 @@ public class StartGameCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {        
         List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
         if (players.size() == 0) return false;
 
@@ -40,6 +44,13 @@ public class StartGameCommand implements CommandExecutor {
         MinigameUtils.minigameCounter = 0;
 
         World world = Bukkit.getWorlds().get(0);
+        WorldBorder border = world.getWorldBorder();
+        border.setCenter(0, 0);
+        border.setSize(90);
+        
+        for (Entity e : world.getEntities()) {
+            if (!(e instanceof Player)) e.remove();
+        }
 
         //clear region around random minigame spawn
         for (int z = -2; z < 2; z++) {
@@ -65,11 +76,20 @@ public class StartGameCommand implements CommandExecutor {
             }
         }
         
-        double radius = SIDE_LENGTH / (2.0 * Math.sin(2.0 * Math.PI / players.size()));
-        if (players.size() <= 2) radius = SIDE_LENGTH / 2.0;
+        double radius =  MinigameUtils.ISLAND_CIRCLE_RADIUS / (2.0 * Math.sin(2.0 * Math.PI / players.size()));
+        if (players.size() <= 2) radius =  MinigameUtils.ISLAND_CIRCLE_RADIUS / 2.0;
         MinigameUtils.playersRemaining = new HashSet<Player>();
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
+
+            for (PotionEffect pe : player.getActivePotionEffects()) {
+                player.removePotionEffect(pe.getType());
+            }
+            player.setHealth(20.0);
+            player.setFoodLevel(20);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 120, 1));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 60, 1));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 5));
             player.getInventory().clear();
             player.setGameMode(GameMode.SURVIVAL);
             MinigameUtils.playersRemaining.add(player);
