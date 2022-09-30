@@ -1,21 +1,21 @@
 items:
   # Melee Weapons =============================================================
-  - weight: 2.0
+  - weight: 0.6
     items:
       - v: 2975
         type: NETHERITE_SWORD
-  - weight: 4.0
+  - weight: 2.5
     items:
       - v: 2975
         type: IRON_SWORD
-  - weight: 3.0
+  - weight: 1.25
     items:
       - v: 2975
         type: WOODEN_SWORD
   - weight: 2.0
     items:
       - v: 2975
-        type: FIRE_CHARGE
+        type: BLAZE_POWDER
         amount: 2
         meta:
           ==: ItemMeta
@@ -251,7 +251,7 @@ items:
   - weight: 2.0
     items:
       - v: 2975
-        type: BRICK
+        type: STONE_PRESSURE_PLATE
         amount: 2
         meta:
           ==: ItemMeta
@@ -260,7 +260,7 @@ items:
   - weight: 2.0
     items:
       - v: 2975
-        type: BRICK
+        type: STONE_BRICK_WALL
         amount: 1
         meta:
           ==: ItemMeta
@@ -410,3 +410,16 @@ items:
       - v: 2975
         type: SHULKER_SPAWN_EGG
         amount: 20
+
+
+# Food
+  - weight: 2.0
+    items:
+      - v: 2975
+        type: COOKED_BEEF
+        amount: 1
+  - weight: 1.0
+    items:
+      - v: 2975
+        type: GOLDEN_APPLE
+        amount: 1

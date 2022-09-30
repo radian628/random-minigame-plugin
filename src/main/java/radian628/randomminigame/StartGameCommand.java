@@ -15,12 +15,14 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.Map;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import radian628.randomminigame.MinigameUtils;
@@ -42,6 +44,7 @@ public class StartGameCommand implements CommandExecutor {
 
         MinigameUtils.isGameActive = true;
         MinigameUtils.minigameCounter = 0;
+        MinigameUtils.initPlayerLocations = new HashMap<Player, Location>();
 
         World world = Bukkit.getWorlds().get(0);
         WorldBorder border = world.getWorldBorder();
@@ -87,9 +90,10 @@ public class StartGameCommand implements CommandExecutor {
             }
             player.setHealth(20.0);
             player.setFoodLevel(20);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 120, 1));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 60, 1));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 5));
+            
+            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, MinigameUtils.COUNTDOWN_LENGTH * 20, 1));
+            //player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 60, 1));
+            //player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 5));
             player.getInventory().clear();
             player.setGameMode(GameMode.SURVIVAL);
             MinigameUtils.playersRemaining.add(player);
@@ -99,6 +103,8 @@ public class StartGameCommand implements CommandExecutor {
             double playerZPos = (Math.sin(angle) * radius);
             
             Location playerLocation = new Location(world, playerXPos, playerYPos, playerZPos);
+            playerLocation.setDirection(new Vector(0, 1, 0));
+            MinigameUtils.initPlayerLocations.put(player, playerLocation);
             player.teleport(playerLocation);
             player.setBedSpawnLocation(playerLocation, true);
 

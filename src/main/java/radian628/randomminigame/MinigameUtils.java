@@ -3,6 +3,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -19,8 +20,11 @@ import java.util.Map;
 public class MinigameUtils {
     public static Map<Entity, Integer> ballLightnings;
 
+    public static Map<Player, Location> initPlayerLocations;
+
     public static int ISLAND_SIZE = 3;
     public static double ISLAND_CIRCLE_RADIUS = 8.0;
+    public static int COUNTDOWN_LENGTH = 5;
 
     public static boolean isGameActive = false;
     public static HashSet<Player> playersRemaining;

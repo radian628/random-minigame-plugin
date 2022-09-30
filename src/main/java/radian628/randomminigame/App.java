@@ -53,8 +53,14 @@ public class App extends JavaPlugin implements Listener {
             @Override
             public void run() {
                 if (MinigameUtils.isGameActive) {
+                    if (MinigameUtils.minigameCounter < MinigameUtils.COUNTDOWN_LENGTH) {
+                        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                            player.sendTitle(String.valueOf(MinigameUtils.COUNTDOWN_LENGTH - MinigameUtils.minigameCounter - 1),
+                             "", 2, 16, 2);
+                        }
+                    }
                     MinigameUtils.minigameCounter++;
-                    boolean shouldGiveItem = MinigameUtils.minigameCounter < 3;
+                    boolean shouldGiveItem = MinigameUtils.minigameCounter < (MinigameUtils.COUNTDOWN_LENGTH + 3) && MinigameUtils.minigameCounter > (MinigameUtils.COUNTDOWN_LENGTH - 1);
                     if (MinigameUtils.minigameCounter % 30 == 0) {
                         shouldGiveItem = true;
                     }
@@ -77,6 +83,14 @@ public class App extends JavaPlugin implements Listener {
         Bukkit.getScheduler().scheduleSyncRepeatingTask((Plugin)this, new Runnable() {
             @Override
             public void run() {
+                if (MinigameUtils.minigameCounter < MinigameUtils.COUNTDOWN_LENGTH) {
+                    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                        if (MinigameUtils.initPlayerLocations.containsKey(player)) {
+                            Location newLoc = MinigameUtils.initPlayerLocations.get(player);
+                            player.teleport(newLoc);
+                        }
+                    }
+                }
                 for (Entry<Entity, Integer> p : MinigameUtils.ballLightnings.entrySet()) {
                   
                     if (p.getValue() > 5) {
@@ -168,7 +182,7 @@ public class App extends JavaPlugin implements Listener {
 
         // Instant Platform
         if (
-            item.getType() == Material.BRICK &&
+            item.getType() == Material.STONE_PRESSURE_PLATE &&
             item.getItemMeta().hasDisplayName() && 
             item.getItemMeta().getDisplayName().equals("Instant Platform")
         ) {
@@ -211,7 +225,7 @@ public class App extends JavaPlugin implements Listener {
 
         // Instant Wall
         if (
-            item.getType() == Material.BRICK &&
+            item.getType() == Material.STONE_BRICK_WALL &&
             item.getItemMeta().hasDisplayName() && 
             item.getItemMeta().getDisplayName().equals("Instant Wall")
         ) {
@@ -298,7 +312,7 @@ public class App extends JavaPlugin implements Listener {
             fireball.setIsIncendiary(true);
             fireball.setDirection(p.getLocation().getDirection());
             fireball.setBounce(true);
-            fireball.setYield(4.0f);
+            fireball.setYield(3.2f);
            
             item.setAmount(item.getAmount() - 1);
         }
@@ -315,15 +329,18 @@ public class App extends JavaPlugin implements Listener {
             RayTraceResult rtr = p.rayTraceBlocks(5);
             if (rtr == null) return;
             Vector pos = rtr.getHitPosition();
-            for (int z = -6; z < 7; z++) {
-                for (int x = -6; x < 7; x++) {
-                    FallingBlock fb = p.getWorld().spawnFallingBlock(
-                        new Location(p.getWorld(), pos.getX() + x, pos.getY() + 30, pos.getZ() + z),
-                        Bukkit.createBlockData(Material.ANVIL)
-                    );
-                    fb.setHurtEntities(true);
-                }
-            }
+            MinigameUtils.clearRegion(p.getWorld(), Material.ANVIL, 
+                (int)pos.getX() -6, Math.min((int)pos.getY() + 30, 319), (int)pos.getZ() -6, 
+                (int)pos.getX()+7, Math.min((int)pos.getY()+31, 320), (int)pos.getZ()+ 7);
+            // for (int z = -6; z < 7; z++) {
+            //     for (int x = -6; x < 7; x++) {
+            //         FallingBlock fb = p.getWorld().spawnFallingBlock(
+            //             new Location(p.getWorld(), pos.getX() + x, pos.getY() + 30, pos.getZ() + z),
+            //             Bukkit.createBlockData(Material.ANVIL)
+            //         );
+            //         fb.setHurtEntities(true);
+            //     }
+            // }
            
             item.setAmount(item.getAmount() - 1);
         }
@@ -332,7 +349,7 @@ public class App extends JavaPlugin implements Listener {
 
         // FIRE RAIN
         if (
-            item.getType() == Material.FIRE_CHARGE &&
+            item.getType() == Material.BLAZE_POWDER &&
             item.getItemMeta().hasDisplayName() && 
             item.getItemMeta().getDisplayName().equals("FIRE RAIN")
         ) {
